@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
-import com.asiatravel.atdownload.ATConstants;
+import com.asiatravel.atdownload.ATDownLoadConstants;
 import com.asiatravel.atdownload.entity.FileInfo;
 import com.orhanobut.logger.Logger;
 
@@ -46,7 +46,7 @@ public class DownloadService extends Service {
                     FileInfo fileInfo = (FileInfo) msg.obj;
                     Logger.e("----->>>HANDER--" + fileInfo);
                     // 拿到结果后启动下载任务
-                    DownloadTask downloadTask = new DownloadTask(fileInfo, DownloadService.this, ATConstants.DOWNLOAD_THREAD_COUNT);
+                    DownloadTask downloadTask = new DownloadTask(fileInfo, DownloadService.this, ATDownLoadConstants.DOWNLOAD_THREAD_COUNT);
                     downloadTask.download();
                     // 把下载任务添加到集合
                     downloadTasks.put(fileInfo.getId(), downloadTask);
@@ -64,11 +64,11 @@ public class DownloadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (ACTION_START.endsWith(intent.getAction())) {
-            FileInfo fileInfo = intent.getParcelableExtra(ATConstants.FILE_NAME_FLAG);
+            FileInfo fileInfo = intent.getParcelableExtra(ATDownLoadConstants.FILE_NAME_FLAG);
             Logger.e(ACTION_START + "---->>>>" + fileInfo);
             DownloadService.executorService.execute(new InitThread(fileInfo));
         } else if (ACTION_STOP.endsWith(intent.getAction())) {
-            FileInfo fileInfo = intent.getParcelableExtra(ATConstants.FILE_NAME_FLAG);
+            FileInfo fileInfo = intent.getParcelableExtra(ATDownLoadConstants.FILE_NAME_FLAG);
             Logger.e(ACTION_STOP + "---->>>>>" + fileInfo);
             // 从下载集合中取出下载任务,根据id取出,
             DownloadTask downloadTask = downloadTasks.get(fileInfo.getId());
@@ -97,7 +97,7 @@ public class DownloadService extends Service {
                 httpURLConnection.setConnectTimeout(3000);
                 httpURLConnection.setRequestMethod("GET");
                 int length;
-                if (ATConstants.HTTP_SC_OK == httpURLConnection.getResponseCode()) {
+                if (ATDownLoadConstants.HTTP_SC_OK == httpURLConnection.getResponseCode()) {
                     length = httpURLConnection.getContentLength();
                     if (length <= 0) {
                         return;

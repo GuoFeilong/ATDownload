@@ -3,7 +3,7 @@ package com.asiatravel.atdownload.serviece;
 import android.content.Context;
 import android.content.Intent;
 
-import com.asiatravel.atdownload.ATConstants;
+import com.asiatravel.atdownload.ATDownLoadConstants;
 import com.asiatravel.atdownload.db.ThreadDao;
 import com.asiatravel.atdownload.db.ThreadDaoImpl;
 import com.asiatravel.atdownload.entity.FileInfo;
@@ -102,7 +102,7 @@ public class DownloadTask {
                 finished += fileInfo.getFinished();
 
                 // 开始下载
-                if (ATConstants.HTTP_SC_RAF_OK == conn.getResponseCode()) {
+                if (ATDownLoadConstants.HTTP_SC_RAF_OK == conn.getResponseCode()) {
                     // 获取文件流
                     inputStream = conn.getInputStream();
                     byte[] buffer = new byte[1024 * 4];
@@ -120,9 +120,9 @@ public class DownloadTask {
                         if (System.currentTimeMillis() - time > 500) {
                             time = System.currentTimeMillis();
                             // 把下载进度发送广播通知activity
-                            intent.putExtra(ATConstants.FILE_DOWN_FINISHIED_FLAG, finished * 100 / fileInfo.getLength());
+                            intent.putExtra(ATDownLoadConstants.FILE_DOWN_FINISHIED_FLAG, finished * 100 / fileInfo.getLength());
                             fileInfo.setFinished(finished);
-                            intent.putExtra(ATConstants.FILE_NAME_FLAG, fileInfo);
+                            intent.putExtra(ATDownLoadConstants.FILE_NAME_FLAG, fileInfo);
                             context.sendBroadcast(intent);
                         }
                         // 下载暂停的时候,记录下载的位置 保存进度到数据库
@@ -176,8 +176,8 @@ public class DownloadTask {
             dao.deleteThread(fileInfo.getUrl());
             // 像activity中发送广播告诉UI下载完毕
             Intent intent = new Intent(DownloadService.ACTION_FINISH);
-            intent.putExtra(ATConstants.FILE_NAME_FLAG, fileInfo);
-            intent.putExtra(ATConstants.FILE_DOWN_FINISHIED_FLAG, 100);
+            intent.putExtra(ATDownLoadConstants.FILE_NAME_FLAG, fileInfo);
+            intent.putExtra(ATDownLoadConstants.FILE_DOWN_FINISHIED_FLAG, 100);
             fileInfo.setFinished(finished);
             context.sendBroadcast(intent);
         }

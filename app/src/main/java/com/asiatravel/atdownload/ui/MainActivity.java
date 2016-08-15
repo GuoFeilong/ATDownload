@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.asiatravel.atdownload.ATConstants;
+import com.asiatravel.atdownload.ATDownLoadConstants;
 import com.asiatravel.atdownload.R;
 import com.asiatravel.atdownload.db.ThreadDao;
 import com.asiatravel.atdownload.db.ThreadDaoImpl;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DownloadService.class);
-                intent.putExtra(ATConstants.FILE_NAME_FLAG, fileInfo);
+                intent.putExtra(ATDownLoadConstants.FILE_NAME_FLAG, fileInfo);
                 intent.setAction(DownloadService.ACTION_START);
                 startService(intent);
             }
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DownloadService.class);
-                intent.putExtra(ATConstants.FILE_NAME_FLAG, fileInfo);
+                intent.putExtra(ATDownLoadConstants.FILE_NAME_FLAG, fileInfo);
                 intent.setAction(DownloadService.ACTION_STOP);
                 startService(intent);
             }
@@ -101,13 +101,13 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 int finished = 0;
                 if (DownloadService.ACTION_UPDATE.equals(intent.getAction())) {
-                    finished = intent.getIntExtra(ATConstants.FILE_DOWN_FINISHIED_FLAG, 0);
+                    finished = intent.getIntExtra(ATDownLoadConstants.FILE_DOWN_FINISHIED_FLAG, 0);
                     progressBar.setProgress(finished);
-                    fileInfo = intent.getParcelableExtra(ATConstants.FILE_NAME_FLAG);
+                    fileInfo = intent.getParcelableExtra(ATDownLoadConstants.FILE_NAME_FLAG);
                     Logger.e("百分比:--->>" + finished + "---->>文件ID" + fileInfo.getId());
                 } else if (DownloadService.ACTION_FINISH.equals(intent.getAction())) {
                     Logger.e("下载完毕---->>文件信息--" + fileInfo.toString());
-                    finished = intent.getIntExtra(ATConstants.FILE_DOWN_FINISHIED_FLAG, 0);
+                    finished = intent.getIntExtra(ATDownLoadConstants.FILE_DOWN_FINISHIED_FLAG, 0);
                     progressBar.setProgress(100);
                 }
 
